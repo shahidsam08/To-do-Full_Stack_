@@ -4,8 +4,8 @@ import { GiHamburgerMenu } from "react-icons/gi";
 function Homepage() {
   const [username, setuserName] = useState("shahid ali");
   return (
-    <div className="bg-black h-screen w-full">
-      <div className="flex flex-col p-4 gap-10">
+    <div className="bg-black scroll-smooth h-auto w-full pb-15">
+      <div className="flex flex-col p-4 gap-10 bg-black">
         <div className=" flex flex-row flex-nowrap items-center justify-between align-middle">
           <div>
             <GiHamburgerMenu className="text-7xl cursor-pointer text-white" />
