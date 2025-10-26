@@ -21,7 +21,8 @@ function Register() {
         alert("Already registered")
         navigate("/")
       } else if(registerData.data === "NewUserCreated") {
-        alert("New User")
+        alert("New User Created!")
+        return navigate("/")
       } else {
         alert("Nothing happen!")
       }

@@ -4,7 +4,7 @@ dotenv.config();
 
 const dbconnect = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, { dbName: "New_User" });
+    await mongoose.connect(process.env.MONGO_URI, { dbName: "Notes_database" });
     console.log("database is connected!");
   } catch (error) {
     console.log(error);

@@ -6,29 +6,28 @@ import { useNavigate } from "react-router";
 function Loginpage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5004/api/login_users", {
-        email: email,
-        password: password,
-      });
-      if(response.data === "user not found!" && response.status === 400) {
-        alert("Incorrect Email.")
-      } else if (response.data === "Invalid password!") {
-        alert("Invalid password")
-      } else {
-        if(response.status === 200) {
-          alert("Go to the dashboard!")
+      const response = await axios.post(
+        "http://localhost:5004/api/login_users",
+        {
+          email: email,
+          password: password,
         }
+      );
+      if (response.data === "Email is wrong!") {
+        return alert("Incorrect Email.");
+      } else if (response.data === "Invalid password!") {
+        return alert("Invalid password");
+      } else if (response.data === "Log in successfully") {
+          return navigate("/homepage")
       }
     } catch (error) {
-      console.log("Error is : " , error)
+      console.log("Error is : ", error);
     }
-      
-      
   };
 
   return (
