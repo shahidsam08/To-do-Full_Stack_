@@ -6,11 +6,13 @@ import jwt from "jsonwebtoken";
 import dbconnect from "./src/Database/dbconnections.js";
 import Register_user from "./src/model/RegisterUser.js"; //model
 import dashboard from "./src/model/dashboard.js"; // homepage model
+import cookieParser from "cookie-parser";
 
 dotenv.config();
 const app = express();
-app.use(cors());
+app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use(express.json());
+app.use(cookieParser());
 
 dbconnect();
 
@@ -40,6 +42,9 @@ app.post("/api/register_user", async (req, res) => {
   }
 });
 
+// Secret key for token based authentication and authorisations
+const secret_token = process.env.ACCESS_TOKEN_KEY;
+
 // Login logic and redirect to the homepage.
 app.post("/api/login_users", async (req, res) => {
   try {
@@ -48,6 +53,17 @@ app.post("/api/login_users", async (req, res) => {
     if (user) {
       const databasepassword = await bcrypt.compare(password, user.password);
       if (databasepassword) {
+        // making the jwt token and send to the frontend.
+        const token = jwt.sign(
+          { email: email, userId: user._id },
+          secret_token,
+          { expiresIn: "5m" }
+        );
+        res.cookie("token", token, {
+          httpOnly: true,
+          secure: false,
+          sameSite: "lax",
+        });
         return res.json("Log in successfully");
       } else {
         return res.json("Invalid password!");
@@ -63,22 +79,16 @@ app.post("/api/login_users", async (req, res) => {
 // dashboard page : show all the data of the user and gives access to save the title and notes of yours.
 app.post("/api/notes", async (req, res) => {
   try {
-    const { title, notes, email } = req.body;
-    const user = await Register_user.findOne({ email: email });
-    if (user) {
-      const dashboarduser = await dashboard.findOne({email : email})
-      if (dashboarduser) {
-         res.json("make only one notes!")
-      } else {
-        await dashboard.create({
-          email: email,
-          title: title,
-          notes: notes,
-        });
-       res.json("Notes created!")
-      }
+    const { token } = req.cookies;
+    if (!token) {
+      return res.json("Authorisation denied!");
     } else {
-      return res.json("user not found!");
+      try {
+        jwt.verify(token, secret_token);
+        res.json("Logged In successfully");
+      } catch (error) {
+        console.log("The error is : ", error);
+      }
     }
   } catch (error) {
     console.log("The error is ", error);

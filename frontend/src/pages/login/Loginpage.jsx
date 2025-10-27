@@ -3,6 +3,8 @@ import { Link } from "react-router";
 import axios from "axios";
 import { useNavigate } from "react-router";
 
+axios.defaults.withCredentials = true;
+
 function Loginpage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,15 +18,17 @@ function Loginpage() {
         {
           email: email,
           password: password,
-        }
+        },
+        { withCredentials: true }
       );
       if (response.data === "Email is wrong!") {
-        return alert("Incorrect Email.");
+         alert("You are not registered!");
+         return navigate("/signUp_page")
       } else if (response.data === "Invalid password!") {
         return alert("Invalid password");
       } else if (response.data === "Log in successfully") {
-          alert("log in successfully!")
-          return navigate("/homepage")
+        alert("log in successfully!");
+        return navigate("/homepage");
       }
     } catch (error) {
       console.log("Error is : ", error);

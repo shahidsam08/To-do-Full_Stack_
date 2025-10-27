@@ -12,19 +12,20 @@ function Homepage() {
   const handlenotes = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5004/api/notes", {
-        email: email,
-        title: title,
-        notes: notes,
-      });
-      if (response.data === "Notes created!") {
-        return alert("Notes Created successfully!");
-      } else if (response.data === "user not found!") {
-      alert(`User not found! \n Make sure you are register!`);
-      return navigate("/signUp_page")
-      } else if (response.data === "make only one notes!") {
-        alert("You can make only One Notes.")
-        return navigate("/homepage")
+      const response = await axios.post(
+        "http://localhost:5004/api/notes",
+        {
+          email: email,
+          title: title,
+          notes: notes,
+        },
+        { withCredentials: true }
+      );
+      if(response.data === "Authorisation denied!") {
+        alert("Access denied!")
+        navigate("/")
+      } else if(response.data === "Logged In successfully") {
+        alert("Logged In successfully!")
       }
     } catch (error) {
       console.log(error);
@@ -48,12 +49,13 @@ function Homepage() {
         </div>
 
         <form
-          action="" onSubmit={handlenotes}
+          action=""
+          onSubmit={handlenotes}
           className="flex flex-col  align-middle justify-center items-center gap-5"
         >
           <div className="w-[90%] flex flex-col gap-5 p-8 bg-gray-900 rounded-2xl">
             <div className="flex flex-row gap-4 items-center">
-              <label for="email" className="text-white text-3xl">
+              <label htmlFor="email" className="text-white text-3xl">
                 Email :{" "}
               </label>
               <input
@@ -74,7 +76,7 @@ function Homepage() {
               </datalist>
             </div>
             <div className="flex flex-row gap-4 items-center">
-              <label for="title" className="text-white text-4xl">
+              <label htmlFor="title" className="text-white text-4xl">
                 Title :{" "}
               </label>
               <input
@@ -91,7 +93,7 @@ function Homepage() {
               />
             </div>
             <div className="flex flex-row gap-4 align-middle items-center">
-              <label for="text" className="text-white text-3xl">
+              <label htmlFor="text" className="text-white text-3xl">
                 Notes :{" "}
               </label>
               <input
