@@ -23,6 +23,7 @@ function Loginpage() {
       } else if (response.data === "Invalid password!") {
         return alert("Invalid password");
       } else if (response.data === "Log in successfully") {
+          alert("log in successfully!")
           return navigate("/homepage")
       }
     } catch (error) {
