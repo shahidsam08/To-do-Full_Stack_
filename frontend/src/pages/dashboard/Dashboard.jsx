@@ -1,36 +1,6 @@
-import { useState } from "react";
 import { GiHamburgerMenu } from "react-icons/gi";
-import axios from "axios";
-import { useNavigate } from "react-router";
 
-function Homepage() {
-  const [email, setEmail] = useState("");
-  const [notes, setnotes] = useState("");
-  const [title, settitle] = useState("");
-  const navigate = useNavigate();
-
-  const handlenotes = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post(
-        "http://localhost:5004/api/notes",
-        {
-          email: email,
-          title: title,
-          notes: notes,
-        },
-        { withCredentials: true }
-      );
-      if(response.data === "Authorisation denied!") {
-        alert("Access denied!")
-        navigate("/")
-      } else if(response.data === "Logged In successfully") {
-        alert("Logged In successfully!")
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+function Dashboard() {
   return (
     <div className="bg-black scroll-smooth h-auto w-full pb-15">
       <div className="flex flex-col p-4 gap-10 bg-black">
@@ -50,7 +20,6 @@ function Homepage() {
 
         <form
           action=""
-          onSubmit={handlenotes}
           className="flex flex-col  align-middle justify-center items-center gap-5"
         >
           <div className="w-[90%] flex flex-col gap-5 p-8 bg-gray-900 rounded-2xl">
@@ -65,7 +34,6 @@ function Homepage() {
                 id="email"
                 required
                 autoComplete="off"
-                onChange={(e) => setEmail(e.target.value)}
                 className="border-2 w-[70%] text-2xl indent-3 h-15 border-white ml-2 text-white outline-offset-2 outline-blue-500 pr-3 "
                 list="browser"
               />
@@ -88,7 +56,6 @@ function Homepage() {
                 minLength={10}
                 maxLength={50}
                 autoComplete="off"
-                onChange={(e) => settitle(e.target.value)}
                 className="border-2 w-[70%] text-2xl indent-3 h-15 border-white ml-2 text-white outline-offset-2 outline-blue-500"
               />
             </div>
@@ -104,7 +71,6 @@ function Homepage() {
                 required
                 autoComplete="off"
                 maxLength={200}
-                onChange={(e) => setnotes(e.target.value)}
                 className="border-2 w-[70%] h-15 text-2xl indent-3 border-white text-white outline-offset-2 outline-blue-500 "
               />
             </div>
@@ -140,4 +106,4 @@ function Homepage() {
   );
 }
 
-export default Homepage;
+export default Dashboard;
