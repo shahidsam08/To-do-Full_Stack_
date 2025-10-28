@@ -21,13 +21,12 @@ function Login() {
         },
         { withCredentials: true }
       );
-      if (response.data === "Email is wrong!") {
-        alert("You are not registered!");
-        return navigate("/signup");
-      } else if (response.data === "Invalid password!") {
-        return alert("Invalid password");
-      } else if (response.data === "Log in successfully") {
-        alert("log in successfully!");
+      if (response.status === 401) {
+        return alert("Invalid email!");
+      } else if (response.status === 401) {
+        return alert("Invalid password!");
+      } else if (response.status === 200) {
+        alert("Log in successfully!");
         return navigate("/dashboard");
       }
     } catch (error) {
@@ -58,6 +57,7 @@ function Login() {
             type="email"
             required
             name="email"
+            autoComplete="on"
             placeholder="Enter your email"
             className="border-2 border-black w-[90%] p-2 text-2xl rounded-2xl indent-2 outline-blue-500 md:w-[75%] lg:w-[50%]"
             onChange={(e) => setEmail(e.target.value)}

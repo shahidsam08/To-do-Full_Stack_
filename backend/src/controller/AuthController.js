@@ -13,7 +13,7 @@ const signup = async (req, res) => {
       return res.status(200).json({message : "already registered", success: false});
     } else {
       const salt = await bcrypt.genSalt(10);
-      const hashedpassword = await bcrypt.hash(password, salt);
+      const hashedpassword = await bcrypt.hash(password, salt)
       Register.create({
         name: name,
         password: hashedpassword,
@@ -32,13 +32,13 @@ const signup = async (req, res) => {
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await Register.findOne({ email });
+    const user = await Register.findOne({ email: email });
     if (user) {
-      const databasepassword = await bcrypt.compare(password, user.password);
-      if (databasepassword) {
+      const isValid = await bcrypt.compare(password, user.password);
+      if (isValid) {
         // making the jwt token and send to the frontend.
         const token = jwt.sign(
-          { email: user.email , userId: user._id },
+          { email: email , userId: user._id },
           process.env.ACCESS_TOKEN_KEY,
           { expiresIn: "24h" }
         );
@@ -49,7 +49,7 @@ const login = async (req, res) => {
         });
         return res.status(200).json({message : "Log in successfully", success: true});
       } else {
-        return res.status(403).json({message: "Invalid password!", success : false});
+        return res.status(401).json({message: "Invalid password!"});
       }
     } else {
       return res.status(401).json({message: "Email is wrong!", success : false});
