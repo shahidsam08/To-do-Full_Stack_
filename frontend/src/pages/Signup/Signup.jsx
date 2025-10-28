@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router";
 import axios from "axios";
 import { useNavigate } from "react-router";
@@ -17,14 +17,12 @@ function Signup() {
       "http://localhost:5004/api/signup",
       { name: name, email: email, password: password }
     );
-      if(registerData.data === "already registered!") {
+      if(registerData.data.message === "already registered") {
         alert("Already registered")
         navigate("/")
-      } else if(registerData.data === "NewUserCreated") {
+      } else if(registerData.data.message === "newUserCreated") {
         alert(`New User Created! \nGo to the Login page and Logged In with your data.`)
         return navigate("/")
-      } else {
-        alert("Nothing happen!")
       }
     } catch(error) {
       console.log(error)

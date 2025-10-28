@@ -19,10 +19,11 @@ function Login() {
           email: email,
           password: password,
         },
+        { withCredentials: true }
       );
       if (response.data === "Email is wrong!") {
-         alert("You are not registered!");
-         return navigate("/signup")
+        alert("You are not registered!");
+        return navigate("/signup");
       } else if (response.data === "Invalid password!") {
         return alert("Invalid password");
       } else if (response.data === "Log in successfully") {
