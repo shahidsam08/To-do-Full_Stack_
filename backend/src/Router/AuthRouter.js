@@ -1,6 +1,6 @@
 import express from 'express'
 import { signupvalidation, loginvalidation } from '../middleware/Authvalidation.js';
-import {signup , login, dashboard,} from '../controller/AuthController.js';
+import {signup , login, dashboard, profile,} from '../controller/AuthController.js';
 import isVerified from '../middleware/tokenValidations.js';
 
 
@@ -17,5 +17,9 @@ router.post("/login",loginvalidation, login);
 // dashboard logic
 //* is verified from the token validation file.
 router.post("/dashboard", isVerified, dashboard)
+
+
+// profile page calling
+router.post("/profile", isVerified, profile )
 
 export default router

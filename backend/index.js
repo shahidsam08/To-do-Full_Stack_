@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import helmet from 'helmet'
 import dbconnect from "./src/Database/dbconnections.js";
 import cookieParser from "cookie-parser";
 import Authrouter from "./src/Router/AuthRouter.js";
@@ -10,6 +11,7 @@ dotenv.config();
 app.use(cors({ origin:'http://localhost:5173', credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
+app.use(helmet())
 
 dbconnect(); // database connection.
 

@@ -1,10 +1,13 @@
 import { GiHamburgerMenu } from "react-icons/gi";
+import { FaUserAlt } from "react-icons/fa"
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
+import { Link } from "react-router";
 
 function Dashboard() {
   const [email, setEmail] = useState("");
+  const[isOpen, setIsOpen] = useState(false)
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   useEffect(() => {
@@ -43,12 +46,14 @@ function Dashboard() {
 
   if(loading) return <div>Loading....</div>
 
+
   return (
     <div className="bg-black scroll-smooth h-auto w-full pb-15">
       <div className="flex flex-col p-4 gap-10 bg-black">
         <div className=" flex flex-row flex-nowrap items-center justify-between align-middle">
           <div>
-            <GiHamburgerMenu className="text-7xl cursor-pointer text-white" />
+            <Link to="/profile">
+            <FaUserAlt className="text-7xl cursor-pointer text-white" /></Link>
           </div>
           <div className="font-bold text-2xl bg-blue-200 border-2 border-white px-3 rounded-2xl">
             {email}
@@ -66,26 +71,6 @@ function Dashboard() {
         >
           <div className="w-[90%] flex flex-col gap-5 p-8 bg-gray-900 rounded-2xl">
             <div className="flex flex-row gap-4 items-center">
-              <label htmlFor="email" className="text-white text-3xl">
-                Email :{" "}
-              </label>
-              <input
-                type="email"
-                name="email"
-                placeholder="Enter your email"
-                id="email"
-                required
-                autoComplete="off"
-                className="border-2 w-[70%] text-2xl indent-3 h-15 border-white ml-2 text-white outline-offset-2 outline-blue-500 pr-3 "
-                list="browser"
-              />
-              <datalist id="browser">
-                <option value="habiba@gmail.com"></option>
-                <option value="shahid@gmail.com"></option>
-                <option value="irshad@gmail.com"></option>
-              </datalist>
-            </div>
-            <div className="flex flex-row gap-4 items-center">
               <label htmlFor="title" className="text-white text-4xl">
                 Title :{" "}
               </label>
@@ -98,7 +83,7 @@ function Dashboard() {
                 minLength={10}
                 maxLength={50}
                 autoComplete="off"
-                className="border-2 w-[70%] text-2xl indent-3 h-15 border-white ml-2 text-white outline-offset-2 outline-blue-500"
+                className="border-2 w-[70%] text-2xl indent-3 h-15 border-white ml-2 text-white outline-offset-2 outline-blue-500 rounded-2xl"
               />
             </div>
             <div className="flex flex-row gap-4 align-middle items-center">
@@ -113,7 +98,7 @@ function Dashboard() {
                 required
                 autoComplete="off"
                 maxLength={200}
-                className="border-2 w-[70%] h-15 text-2xl indent-3 border-white text-white outline-offset-2 outline-blue-500 "
+                className="border-2 w-[70%] h-18 text-2xl indent-3 border-white text-white outline-offset-2 outline-blue-500 rounded-2xl"
               />
             </div>
           </div>

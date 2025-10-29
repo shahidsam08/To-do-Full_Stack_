@@ -21,10 +21,9 @@ function Login() {
         },
         { withCredentials: true }
       );
-      const data = response.data
-      if(data.message === "Log in successfully") {
+      if(response.data.message === "Log in successfully") {
         return navigate("/dashboard")
-      } else if (data.message === "Invalid password!") {
+      } else if (response.data.message === "Invalid password!") {
         return alert("Invalid password")
       } else if(data.message === "Email is wrong!") {
         return alert("Email is wrong")

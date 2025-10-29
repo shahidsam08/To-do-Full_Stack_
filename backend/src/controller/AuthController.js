@@ -39,7 +39,7 @@ const login = async (req, res) => {
         const token = jwt.sign(
           { email: email, userId: user._id },
           process.env.ACCESS_TOKEN_KEY,
-          { expiresIn: "1m" }
+          { expiresIn: "1h" }
         );
         res.cookie("token", token, {
           httpOnly: true,
@@ -67,4 +67,16 @@ const dashboard = async (req, res) => {
   res.status(200).json({useremail: req.user.email, success: true})
 };
 
-export { signup, login, dashboard };
+
+
+// profile controller 
+const profile =async () => {
+  try {
+    const { email } = req.user.email
+    res.json({email: email})
+  } catch (error) {
+    
+  }
+}
+
+export { signup, login, dashboard, profile };
