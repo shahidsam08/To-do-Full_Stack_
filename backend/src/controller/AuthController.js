@@ -59,4 +59,13 @@ const login = async (req, res) => {
   }
 };
 
-export { signup, login };
+// dashboard controller 
+const dashboard = async (req, res) => {
+  try {
+    
+  } catch (error) {
+    
+  }
+}
+
+export { signup, login, dashboard};

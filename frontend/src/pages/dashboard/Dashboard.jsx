@@ -1,8 +1,24 @@
 import { GiHamburgerMenu } from "react-icons/gi";
+import axios from "axios";
+import { useEffect } from "react";
 
+
+axios.defaults.withCredentials = true;
 
 function Dashboard() {
-  
+
+  useEffect(async () => {
+    try {
+      const res = await axios.post("http://localhost:5004/api/dashboard", {
+        withCredentials: true,
+      });
+
+      const data = res.data;
+    } catch (error) {
+      console.log("The error is: ",error)
+    }
+  }, []);
+
   return (
     <div className="bg-black scroll-smooth h-auto w-full pb-15">
       <div className="flex flex-col p-4 gap-10 bg-black">

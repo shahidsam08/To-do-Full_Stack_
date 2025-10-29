@@ -21,13 +21,13 @@ function Login() {
         },
         { withCredentials: true }
       );
-      if (response.status === 401) {
-        return alert("Invalid email!");
-      } else if (response.status === 401) {
-        return alert("Invalid password!");
-      } else if (response.status === 200) {
-        alert("Log in successfully!");
-        return navigate("/dashboard");
+      const data = response.data
+      if(data.message === "Log in successfully") {
+        return navigate("/dashboard")
+      } else if (data.message === "Invalid password!") {
+        return alert("Invalid password")
+      } else if(data.message === "Email is wrong!") {
+        return alert("Email is wrong")
       }
     } catch (error) {
       console.log("Error is : ", error);
@@ -68,8 +68,7 @@ function Login() {
             required
             name="password"
             placeholder="Enter your password"
-            maxLength={15}
-            autoComplete="true"
+            autoComplete="on"
             className="border-2 border-black w-[90%] p-2 text-2xl rounded-2xl indent-2 outline-blue-500 md:w-[75%] lg:w-[50%]"
             onChange={(e) => setPassword(e.target.value)}
           />
