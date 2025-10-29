@@ -1,8 +1,7 @@
 import Register from "../model/RegisterUser.js";
-import bcrypt from 'bcrypt'
-import jwt from 'jsonwebtoken'
-
-
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import isVerified from "../middleware/tokenValidations.js";
 
 //signup controller
 const signup = async (req, res) => {
@@ -10,23 +9,23 @@ const signup = async (req, res) => {
     const { name, email, password } = req.body;
     const user = await Register.findOne({ email: email });
     if (user) {
-      return res.status(200).json({message : "already registered", success: false});
+      return res
+        .status(200)
+        .json({ message: "already registered", success: false });
     } else {
       const salt = await bcrypt.genSalt(10);
-      const hashedpassword = await bcrypt.hash(password, salt)
+      const hashedpassword = await bcrypt.hash(password, salt);
       Register.create({
         name: name,
         password: hashedpassword,
         email: email,
       });
-      res.status(200).json({message : "newUserCreated", success: true,});
+      res.status(200).json({ message: "newUserCreated", success: true });
     }
   } catch (error) {
     console.log(error);
   }
 };
-
-
 
 // login controller
 const login = async (req, res) => {
@@ -38,34 +37,34 @@ const login = async (req, res) => {
       if (isValid) {
         // making the jwt token and send to the frontend.
         const token = jwt.sign(
-          { email: email , userId: user._id },
+          { email: email, userId: user._id },
           process.env.ACCESS_TOKEN_KEY,
-          { expiresIn: "24h" }
+          { expiresIn: "1m" }
         );
         res.cookie("token", token, {
           httpOnly: true,
           secure: false,
           sameSite: "lax",
         });
-        return res.status(200).json({message : "Log in successfully", success: true});
+        return res
+          .status(200)
+          .json({ message: "Log in successfully", success: true });
       } else {
-        return res.status(401).json({message: "Invalid password!"});
+        return res.status(401).json({ message: "Invalid password!" });
       }
     } else {
-      return res.status(401).json({message: "Email is wrong!", success : false});
+      return res
+        .status(401)
+        .json({ message: "Email is wrong!", success: false });
     }
   } catch (error) {
     console.log("The error is ", error);
   }
 };
 
-// dashboard controller 
+// dashboard controller
 const dashboard = async (req, res) => {
-  try {
-    
-  } catch (error) {
-    
-  }
-}
+  res.status(200).json({useremail: req.user.email, success: true})
+};
 
-export { signup, login, dashboard};
+export { signup, login, dashboard };

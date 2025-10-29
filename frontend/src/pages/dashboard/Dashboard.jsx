@@ -1,23 +1,47 @@
 import { GiHamburgerMenu } from "react-icons/gi";
 import axios from "axios";
-import { useEffect } from "react";
-
-
-axios.defaults.withCredentials = true;
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router";
 
 function Dashboard() {
-
-  useEffect(async () => {
+  const [email, setEmail] = useState("");
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
     try {
-      const res = await axios.post("http://localhost:5004/api/dashboard", {
-        withCredentials: true,
-      });
-
-      const data = res.data;
+      axios
+        .post(
+          "http://localhost:5004/api/dashboard",
+          {},
+          {
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          if (response.data.success === true) {
+            return setEmail(response.data.useremail);
+          } else if (response.data.message === "badRequest") {
+            return navigate("/");
+          } else if (response.data === "token is expired") {
+            return navigate("/");
+          } else {
+            return (
+              <p className="font-bold text-4xl text-center">
+                404 page not found
+              </p>
+            );
+          }
+        })
+        .catch((err) => {
+          navigate("/");
+        })
+        .finally(() => setLoading(false));
     } catch (error) {
-      console.log("The error is: ",error)
+      console.log("The error is: ", error);
     }
-  }, []);
+  }, [])
+
+  if(loading) return <div>Loading....</div>
 
   return (
     <div className="bg-black scroll-smooth h-auto w-full pb-15">
@@ -27,7 +51,7 @@ function Dashboard() {
             <GiHamburgerMenu className="text-7xl cursor-pointer text-white" />
           </div>
           <div className="font-bold text-2xl bg-blue-200 border-2 border-white px-3 rounded-2xl">
-            User_name
+            {email}
           </div>
           <div className="border-2 border-white w-25 h-25 rounded-full flex flex-col align-middle justify-center items-center p-1">
             <div className="bg-white w-22 h-23 rounded-full flex items-center align-center justify-center text-center ">
