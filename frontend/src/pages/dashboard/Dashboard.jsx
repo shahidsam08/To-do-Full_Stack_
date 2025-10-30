@@ -13,6 +13,11 @@ function Dashboard() {
   const [show, setshow] = useState(false);
   const navigate = useNavigate();
   const [submitnotes, setSubmitnotes] = useState(false);
+
+  /** database notes and title name */
+  const [shownotes, setshowNotes] = useState([]);
+
+  /** call first time when the website load */
   useEffect(() => {
     try {
       axios
@@ -67,19 +72,45 @@ function Dashboard() {
       } else if ((res.data.message = "badRequest")) {
         alert("Bad request happen");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   /* Use the useEffect for the when i save the data and that one time is reloading the page. */
+  // function for the clear input fields
 
   useEffect(() => {
-    if (submitnotes) {
-      alert("Notes submitted successfully.");
+    if(submitnotes) {
+      alert("Notes are submitted successfully;")
     }
   }, [noteshandle]);
 
+
+
+  /** take the data from /user/shownotes */
+  const fetchnotes = () => {
+    try {
+      axios
+        .get("http://localhost:5004/user/shownotes", { withCredentials: true })
+        .then((res) => {
+          if (res.status === 200) {
+            setshowNotes(res.data);
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchnotes();
+  }, [submitnotes]);
   return (
-    <div className="bg-black scroll-smooth h-auto w-full pb-15">
+    <div className="bg-black scroll-smooth h-screen w-full pb-15">
       <div className="flex flex-col p-5 gap-10 bg-black">
         <div className=" flex flex-row flex-nowrap items-center justify-between align-middle">
           <div>
@@ -161,24 +192,35 @@ function Dashboard() {
         </button>
 
         {/* All the history will be shown here */}
-        <div className="flex flex-row justify-around align-middle items-center">
-          <div className="border-2 border-white w-[40%] p-6 ml-10 flex flex-col gap-5">
-            <div className="flex flex-col gap-2">
-              <div className="text-white">
-                <h1 className="text-3xl">Title: </h1>
-                <p className="text-3xl">data: </p>
+
+        {shownotes.length === 0 ? (
+          <p className="text-pink-500 text-2xl ml-10 ">No Notes found</p>
+        ) : (
+          shownotes.map((shownote) => (
+            <div className="flex flex-row justify-around align-middle items-center">
+              <div className="border-2 border-white w-full p-6 ml-10 flex flex-col gap-5">
+                <div className="flex flex-col gap-2">
+                  <div key={shownote._id}>
+                    <h1 className="text-3xl text-white">
+                      Title:{shownote.title}{" "}
+                    </h1>
+                    <p className="text-3xl text-white">
+                      data: {shownote.notes}{" "}
+                    </p>
+                  </div>
+                  <div className="flex lg:flex-row gap-4 flex-wrap">
+                    <button className="text-white bg-blue-500 px-5 py-3 text-3xl rounded-2xl">
+                      Edit
+                    </button>
+                    <button className="text-white bg-red-500 px-5 py-3 text-3xl rounded-2xl">
+                      Delete
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="flex lg:flex-row gap-4 flex-wrap">
-              <button className="text-white bg-blue-500 px-5 py-3 text-3xl rounded-2xl">
-                Edit
-              </button>
-              <button className="text-white bg-red-500 px-5 py-3 text-3xl rounded-2xl">
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
+          ))
+        )}
 
         {/* This is the end of the element of the database. */}
       </div>

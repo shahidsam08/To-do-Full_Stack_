@@ -25,6 +25,7 @@ app.get("/", (req, res) => {
 app.use("/api", Authrouter);
 
 
+/* notes handle ( show notes on the frontend, show other details.) */
 app.use("/user", notesrouter)
 
 app.listen(process.env.PORT, () => {

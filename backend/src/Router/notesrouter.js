@@ -1,5 +1,5 @@
 import express from "express"
-import userNotes from "../controller/notescontroller.js"
+import  {userNotes, shownotes } from "../controller/notescontroller.js"
 import isVerified from "../middleware/tokenValidations.js"
 
 
@@ -8,6 +8,11 @@ const router = express.Router()
 
 /* ---------------- save notes on the usernotes db and show on the dashboard page ---------------- */
 router.post("/notes",isVerified,  userNotes)
+
+
+/* shownotes api call the database to show the user history notes on the page. */
+
+router.get("/shownotes", isVerified, shownotes)
 
 
 export default router
