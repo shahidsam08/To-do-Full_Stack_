@@ -1,5 +1,6 @@
-import { GiHamburgerMenu } from "react-icons/gi";
-import { FaUserAlt } from "react-icons/fa"
+import { FaUserAlt } from "react-icons/fa";
+import { SlArrowDown } from "react-icons/sl";
+import { SlArrowUp } from "react-icons/sl";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
@@ -7,9 +8,11 @@ import { Link } from "react-router";
 
 function Dashboard() {
   const [email, setEmail] = useState("");
-  const[isOpen, setIsOpen] = useState(false)
+  const [title, setTitle] = useState("");
+  const [notes, setNotes] = useState("");
+  const [show, setshow] = useState(false);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
+  const [submitnotes, setSubmitnotes] = useState(false);
   useEffect(() => {
     try {
       axios
@@ -37,23 +40,52 @@ function Dashboard() {
         })
         .catch((err) => {
           navigate("/");
-        })
-        .finally(() => setLoading(false));
+        });
     } catch (error) {
       console.log("The error is: ", error);
     }
-  }, [])
+  }, []);
 
-  if(loading) return <div>Loading....</div>
+  /* --------- This api axios call for store the data into the db and show on the dashboard page */
 
+  const noteshandle = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        "http://localhost:5004/user/notes",
+        {
+          title: title,
+          notes: notes,
+        },
+        { withCredentials: true }
+      );
+
+      if (res.data === "Created successfully.") {
+        setSubmitnotes(true); // check the nodtes created succesfully
+      } else if (res.data === "token is expired") {
+        alert("token is expired!");
+      } else if ((res.data.message = "badRequest")) {
+        alert("Bad request happen");
+      }
+    } catch (error) {}
+  };
+
+  /* Use the useEffect for the when i save the data and that one time is reloading the page. */
+
+  useEffect(() => {
+    if (submitnotes) {
+      alert("Notes submitted successfully.");
+    }
+  }, [noteshandle]);
 
   return (
     <div className="bg-black scroll-smooth h-auto w-full pb-15">
-      <div className="flex flex-col p-4 gap-10 bg-black">
+      <div className="flex flex-col p-5 gap-10 bg-black">
         <div className=" flex flex-row flex-nowrap items-center justify-between align-middle">
           <div>
             <Link to="/profile">
-            <FaUserAlt className="text-7xl cursor-pointer text-white" /></Link>
+              <FaUserAlt className="text-7xl cursor-pointer text-white" />
+            </Link>
           </div>
           <div className="font-bold text-2xl bg-blue-200 border-2 border-white px-3 rounded-2xl">
             {email}
@@ -67,6 +99,7 @@ function Dashboard() {
 
         <form
           action=""
+          onSubmit={noteshandle}
           className="flex flex-col  align-middle justify-center items-center gap-5"
         >
           <div className="w-[90%] flex flex-col gap-5 p-8 bg-gray-900 rounded-2xl">
@@ -84,6 +117,7 @@ function Dashboard() {
                 maxLength={50}
                 autoComplete="off"
                 className="border-2 w-[70%] text-2xl indent-3 h-15 border-white ml-2 text-white outline-offset-2 outline-blue-500 rounded-2xl"
+                onChange={(e) => setTitle(e.target.value)}
               />
             </div>
             <div className="flex flex-row gap-4 align-middle items-center">
@@ -99,35 +133,54 @@ function Dashboard() {
                 autoComplete="off"
                 maxLength={200}
                 className="border-2 w-[70%] h-18 text-2xl indent-3 border-white text-white outline-offset-2 outline-blue-500 rounded-2xl"
+                onChange={(e) => setNotes(e.target.value)}
               />
             </div>
           </div>
           <button
             type="submit"
-            className="text-white bg-blue-500 px-5 py-3 text-3xl rounded-2xl"
+            className="text-white bg-blue-500 hover:bg-blue-500 px-5 py-3 text-3xl cursor-pointer rounded-2xl"
           >
             Create
           </button>
         </form>
-        <h1 className="text-white self-start text-4xl mb-4 indent-8">
-          History
-        </h1>
+        <button
+          onClick={() => {
+            if (show === true) {
+              setshow(false);
+            } else {
+              setshow(true);
+            }
+          }}
+          className=" w-fit mb-4"
+        >
+          <div className=" text-4xl mt-4 w-fit bg-gray-300  border-2 border-white  indent-8   flex flex-row items-center gap-4 pt-3 pr-4 rounded-2xl ml-5">
+            <p className="pb-3">History</p>{" "}
+            {show ? <SlArrowDown className="font-extrabold" /> : <SlArrowUp />}
+          </div>
+        </button>
+
         {/* All the history will be shown here */}
-        <div className="w-full flex flex-col lg:flex-row align-middle justify-center items-center lg:self-start gap-4 md:gap-6 ">
-          <textarea
-            name="db_text"
-            id="text-area"
-            className="text-white text-2xl w-[95%] md:w-[80%] h-50 border-2 border-white py-2 px-4 outline-offset-2 outline-blue-500"
-          ></textarea>
-          <div className="flex flex-row lg:flex-col gap-4">
-            <button className="text-white bg-blue-500 px-5 py-3 text-3xl rounded-2xl">
-              Edit
-            </button>
-            <button className="text-white bg-red-500 px-5 py-3 text-3xl rounded-2xl">
-              Delete
-            </button>
+        <div className="flex flex-row justify-around align-middle items-center">
+          <div className="border-2 border-white w-[40%] p-6 ml-10 flex flex-col gap-5">
+            <div className="flex flex-col gap-2">
+              <div className="text-white">
+                <h1 className="text-3xl">Title: </h1>
+                <p className="text-3xl">data: </p>
+              </div>
+            </div>
+            <div className="flex lg:flex-row gap-4 flex-wrap">
+              <button className="text-white bg-blue-500 px-5 py-3 text-3xl rounded-2xl">
+                Edit
+              </button>
+              <button className="text-white bg-red-500 px-5 py-3 text-3xl rounded-2xl">
+                Delete
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* This is the end of the element of the database. */}
       </div>
     </div>
   );

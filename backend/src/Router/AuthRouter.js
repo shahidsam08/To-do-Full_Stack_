@@ -1,25 +1,28 @@
 import express from 'express'
 import { signupvalidation, loginvalidation } from '../middleware/Authvalidation.js';
-import {signup , login, dashboard, profile,} from '../controller/AuthController.js';
+import {signup , login, dashboard, profile, logout,} from '../controller/AuthController.js';
 import isVerified from '../middleware/tokenValidations.js';
 
 
 const router = express.Router();
 
-// sign up logic 
+/* ---------------- Sign up logic ------------------- */
 router.post("/signup", signupvalidation, signup );
 
 
-/// login logic: --
+/* ---------------- Login logic ------------------- */
 router.post("/login",loginvalidation, login);
 
 
-// dashboard logic
-//* is verified from the token validation file.
+/* ---------------- Dashboard page logic ( is verified a middleware for token validation) ------------------- */
 router.post("/dashboard", isVerified, dashboard)
 
 
-// profile page calling
-router.post("/profile", isVerified, profile )
+/* ---------------- profile page callling ------------------- */
+router.get("/profile", isVerified, profile )
+
+
+/* ---------------- logout api calling logic ------------------- */
+router.get("/logout", logout)
 
 export default router

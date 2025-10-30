@@ -1,9 +1,8 @@
 import Register from "../model/RegisterUser.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import isVerified from "../middleware/tokenValidations.js";
 
-//signup controller
+/* ---------------- Sign up controller------------------- */
 const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -27,7 +26,7 @@ const signup = async (req, res) => {
   }
 };
 
-// login controller
+/* ---------------- login controller ------------------- */
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -45,6 +44,7 @@ const login = async (req, res) => {
           httpOnly: true,
           secure: false,
           sameSite: "lax",
+          path: "/"
         });
         return res
           .status(200)
@@ -62,21 +62,48 @@ const login = async (req, res) => {
   }
 };
 
-// dashboard controller
+/* ---------------- dashboard controller ------------------- */
 const dashboard = async (req, res) => {
-  res.status(200).json({useremail: req.user.email, success: true})
+  res.status(200).json({ useremail: req.user.email, success: true });
 };
 
-
-
-// profile controller 
-const profile =async () => {
+/* ---------------- profile controller ------------------- */
+const profile = async (req, res) => {
+  const token = req.cookies
   try {
-    const { email } = req.user.email
-    res.json({email: email})
+    const user = await Register.findOne({ email: req.user.email });
+    if (user) {
+      res.status(200).json({
+        message: "successfull",
+        useremail: user.email,
+        username: user.name,
+      });
+    } else {
+      res.status(400).json({ message: "NO data found!" });
+    }
   } catch (error) {
-    
+    res.json(error);
   }
-}
+};
 
-export { signup, login, dashboard, profile };
+/* ---------------- logout controller logic ------------------- */
+
+const logout = async (req, res) => {
+  const token = req.cookies;
+  try {
+    if(token) {
+      res.clearCookie("token", {
+      httpOnly: true,
+      secure: false,
+      sameSite: "lax",
+      path: "/"
+    });
+    res.status(200).json({ message: "Tokencleared", success: true });
+    } 
+    
+  } catch (error) {
+    res.status(404).json({ message: "Internal error" });
+  }
+};
+
+export { signup, login, dashboard, profile, logout };

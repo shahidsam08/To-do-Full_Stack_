@@ -5,6 +5,7 @@ import helmet from 'helmet'
 import dbconnect from "./src/Database/dbconnections.js";
 import cookieParser from "cookie-parser";
 import Authrouter from "./src/Router/AuthRouter.js";
+import notesrouter from './src/Router/notesrouter.js'
 
 const app = express();
 dotenv.config();
@@ -20,8 +21,11 @@ app.get("/", (req, res) => {
   res.send("This is the upi homepage");
 });
 
-// Authlogic ( sign up logic, sign in logic )
+/* ------------- Authlogic handle [ signup, login, validation, profile, dashboard] */
 app.use("/api", Authrouter);
+
+
+app.use("/user", notesrouter)
 
 app.listen(process.env.PORT, () => {
   console.log(`http://localhost:${process.env.PORT}`);

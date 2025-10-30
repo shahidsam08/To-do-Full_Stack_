@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken"
+import express from "express"
 
-// isverified validations
+/* ------------------- Token validation for login or check --------------- */
 const isVerified = async( req, res, next) => {
   try {
     const{token} = req.cookies
