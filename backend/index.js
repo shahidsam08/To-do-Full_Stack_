@@ -28,6 +28,9 @@ app.use("/api", Authrouter);
 /* notes handle ( show notes on the frontend, show other details.) */
 app.use("/user", notesrouter)
 
+
+// ----------- For deleting th
+
 app.listen(process.env.PORT, () => {
   console.log(`http://localhost:${process.env.PORT}`);
 });

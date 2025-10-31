@@ -30,7 +30,7 @@ const shownotes = async (req, res) => {
   try {
     const data = req.user;
     if (data) {
-      const user = await Notes.find({userid : data.userId});
+      const user = await Notes.find({ userid: data.userId });
       res.status(200).json(user);
     } else {
       res.status(401).json({ message: "UnauthoriseToken" });
@@ -40,4 +40,21 @@ const shownotes = async (req, res) => {
   }
 };
 
-export { userNotes, shownotes };
+// Delete the notes from the dashboard and also from the database.
+
+const deleteNotes =  async (req, res) => {
+  try {
+    const noteId = req.params.id;
+    const note = await Notes.findById(noteId);
+    if(!note) {
+      return res.status(404).json({message : "Note not found"})
+    }
+    // delete the note
+    await Notes.deleteOne({ _id: noteId })
+    res.status(200).json({message : "Note deleted successfully"})
+  } catch (error) {
+    res.status(500).json({message : "server error", error : error})
+  }
+}
+
+export { userNotes, shownotes, deleteNotes };

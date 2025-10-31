@@ -12,12 +12,18 @@ function Dashboard() {
   const [notes, setNotes] = useState("");
   const [show, setshow] = useState(false);
   const navigate = useNavigate();
+
+  // for showing the notes.
   const [submitnotes, setSubmitnotes] = useState(false);
 
   /** database notes and title name */
   const [shownotes, setshowNotes] = useState([]);
 
-  /** call first time when the website load */
+
+  /** for deleting and id  */
+  const [id, setId] = useState()
+
+  /**---------------- call first time when the website load ----------------------------*/
   useEffect(() => {
     try {
       axios
@@ -51,7 +57,7 @@ function Dashboard() {
     }
   }, []);
 
-  /* --------- This api axios call for store the data into the db and show on the dashboard page */
+  /* --------- This api axios call for store the data into the db and show on the dashboard page -----------------------------*/
 
   const noteshandle = async (e) => {
     e.preventDefault();
@@ -77,7 +83,7 @@ function Dashboard() {
     }
   };
 
-  /* Use the useEffect for the when i save the data and that one time is reloading the page. */
+  /*---------------- Use the useEffect for the when i save the data and that one time is reloading the page.----------------- */
   // function for the clear input fields
 
   useEffect(() => {
@@ -88,7 +94,9 @@ function Dashboard() {
 
 
 
-  /** take the data from /user/shownotes */
+  /**------------ take the data from /user/shownotes ----------------*/
+
+
   const fetchnotes = () => {
     try {
       axios
@@ -109,6 +117,29 @@ function Dashboard() {
   useEffect(() => {
     fetchnotes();
   }, [submitnotes]);
+
+
+
+
+  /* --------------- Logic for editing the notes ---------------------------- */
+
+
+
+
+
+  /* ----------------------- Deleting the Notes ------------------------- */
+
+  const delnotesHandle = async ({shownotes})=> {
+    try {
+      await axios.delete(`http://localhost:user/${shownotes}`, {withCredentials: true}).then((res) => {
+        alert("Note deleted ")
+      })
+
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <div className="bg-black scroll-smooth h-screen w-full pb-15">
       <div className="flex flex-col p-5 gap-10 bg-black">
@@ -212,7 +243,9 @@ function Dashboard() {
                     <button className="text-white bg-blue-500 px-5 py-3 text-3xl rounded-2xl">
                       Edit
                     </button>
-                    <button className="text-white bg-red-500 px-5 py-3 text-3xl rounded-2xl">
+                    <button className="text-white bg-red-500 px-5 py-3 text-3xl rounded-2xl"
+                    onClick={delnotesHandle}
+                    >
                       Delete
                     </button>
                   </div>
