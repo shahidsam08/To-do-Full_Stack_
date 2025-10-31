@@ -3,7 +3,8 @@ import { Routes, Route } from "react-router"
 import Login from "./pages/login/Login"
 import Signup from "./pages/Signup/Signup"
 import Dashboard from "./pages/dashboard/Dashboard"
-import Profile from "./pages/profile/profile"
+import Editnotes from "./pages/EditNotes/Editnotes"
+import Profile from "./pages/profile/Profile"
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/editNotes" element={<Editnotes />} />
         </Routes>
       </BrowserRouter>
     </div>

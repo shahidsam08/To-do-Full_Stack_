@@ -16,7 +16,7 @@ router.get("/shownotes", isVerified, shownotes)
 
 
 
-router.delete("/:id", deleteNotes);
+router.delete("/delete/:id",isVerified, deleteNotes);
 
 
 export default router

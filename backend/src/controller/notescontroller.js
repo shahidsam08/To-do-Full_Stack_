@@ -44,14 +44,13 @@ const shownotes = async (req, res) => {
 
 const deleteNotes =  async (req, res) => {
   try {
-    const noteId = req.params.id;
-    const note = await Notes.findById(noteId);
-    if(!note) {
-      return res.status(404).json({message : "Note not found"})
+    const noteid = req.params.id
+    const deleteNotes = await Notes.findByIdAndDelete({_id : noteid})
+    if(deleteNotes) {
+      res.status(200).json({message : "DeleteSuccessfully"})
+    } else  {
+      res.status(401).json({message : "Notes not found!"})
     }
-    // delete the note
-    await Notes.deleteOne({ _id: noteId })
-    res.status(200).json({message : "Note deleted successfully"})
   } catch (error) {
     res.status(500).json({message : "server error", error : error})
   }

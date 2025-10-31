@@ -21,7 +21,7 @@ function Dashboard() {
 
 
   /** for deleting and id  */
-  const [id, setId] = useState()
+  const [noteid, setId] = useState("");
 
   /**---------------- call first time when the website load ----------------------------*/
   useEffect(() => {
@@ -73,6 +73,7 @@ function Dashboard() {
 
       if (res.data === "Created successfully.") {
         setSubmitnotes(true); // check the nodtes created succesfully
+        window.location.reload()
       } else if (res.data === "token is expired") {
         alert("token is expired!");
       } else if ((res.data.message = "badRequest")) {
@@ -87,15 +88,12 @@ function Dashboard() {
   // function for the clear input fields
 
   useEffect(() => {
-    if(submitnotes) {
-      alert("Notes are submitted successfully;")
+    if (submitnotes) {
+      alert("Notes are submitted successfully;");
     }
   }, [noteshandle]);
 
-
-
   /**------------ take the data from /user/shownotes ----------------*/
-
 
   const fetchnotes = () => {
     try {
@@ -118,27 +116,26 @@ function Dashboard() {
     fetchnotes();
   }, [submitnotes]);
 
-
-
-
   /* --------------- Logic for editing the notes ---------------------------- */
 
-
-
-
-
   /* ----------------------- Deleting the Notes ------------------------- */
-
-  const delnotesHandle = async ({shownotes})=> {
+  const delnotesHandle = async (id) => {
     try {
-      await axios.delete(`http://localhost:user/${shownotes}`, {withCredentials: true}).then((res) => {
-        alert("Note deleted ")
-      })
-
+      await axios
+        .delete(`http://localhost:5004/user/delete/${id}`, {
+          withCredentials: true,
+        })
+        .then((res) => {
+          if (res.data.message === "DeleteSuccessfully") {
+            alert("note Delete successfully")
+            window.location.reload()
+          }
+        });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
+
 
   return (
     <div className="bg-black scroll-smooth h-screen w-full pb-15">
@@ -229,22 +226,27 @@ function Dashboard() {
         ) : (
           shownotes.map((shownote) => (
             <div className="flex flex-row justify-around align-middle items-center">
-              <div className="border-2 border-white w-full p-6 ml-10 flex flex-col gap-5">
-                <div className="flex flex-col gap-2">
-                  <div key={shownote._id}>
+              <div className="border-2 border-white w-full p-6 ml-10 rounded-2xl flex flex-col gap-7">
+                <div className="flex flex-col gap-6">
+                  <div className="flex flex-col gap-5" key={shownote._id}>
                     <h1 className="text-3xl text-white">
-                      Title:{shownote.title}{" "}
+                      <span className="text-4xl font-bold text-pink-700 order-2 border-pink-500 bg-amber-200 p-1 rounded-2xl mr-3">Title:</span> {shownote.title}{" "}
                     </h1>
                     <p className="text-3xl text-white">
-                      data: {shownote.notes}{" "}
+                      <span className="text-4xl font-bold text-pink-700 border-2 border-pink-500 bg-amber-200 p-1 rounded-2xl mr-3">Notes:</span> {shownote.notes}{" "}
                     </p>
                   </div>
                   <div className="flex lg:flex-row gap-4 flex-wrap">
-                    <button className="text-white bg-blue-500 px-5 py-3 text-3xl rounded-2xl">
+                    <button className="text-white bg-blue-500 px-5 py-3 text-3xl rounded-2xl" onClick={() => {const value = window.confirm("Are you sure to confirm?")
+                      if(value === true) {
+                        navigate("/editNotes")
+                      }
+                    }}>
                       Edit
                     </button>
-                    <button className="text-white bg-red-500 px-5 py-3 text-3xl rounded-2xl"
-                    onClick={delnotesHandle}
+                    <button
+                      className="text-white bg-red-600 px-5 py-3 text-3xl rounded-2xl cursor-pointer hover:bg-red-800 transition duration-1000 ease-in-out"
+                      onClick={ () => {delnotesHandle(shownote._id)}}
                     >
                       Delete
                     </button>
