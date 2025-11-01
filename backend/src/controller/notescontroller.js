@@ -60,7 +60,8 @@ const deleteNotes =  async (req, res) => {
 
 // -------------------- notes edit -----------//
 const editnotes = async (req, res) => {
-
+  const noteid = req.params.id
+  const updatedata = await Notes.findOneAndUpdate({_id : noteid})
 }
 
 

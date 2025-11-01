@@ -136,6 +136,25 @@ function Dashboard() {
   };
 
   /** ---------------------- Edit notes from the id ------------------------------------- */
+  const updatedataHandle = async (id) => {
+    try {
+      await axios
+        .patch(
+          `http://localhost:5004/user/edit/${id}`,
+          {
+            title: title,
+            notes: notes,
+          },
+          { withCredentials: true }
+        )
+        .then((res) => {})
+        .catch((err) => {
+          console.log(err);
+        });
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <div className="bg-black scroll-smooth h-screen w-full pb-15">
@@ -219,48 +238,7 @@ function Dashboard() {
           </div>
         </button>
 
-
-           {/*---------------------------------------------------------- show the edit notes UI ---------------------------------------------------------*/}
-        { hidepop ?
-          <div className="bg-black w-full flex flex-col items-center align-middle justify-center">
-          <div className="w-[80%] h-[70%] p-5 bg-gray-800 rounded-2xl gap-10 flex flex-col align-middle justify-center items-center">
-            <h1 className="text-white text-6xl font-stretch-ultra-condensed">
-              Edit Your Notes
-            </h1>
-            <form
-              className="flex flex-col gap-5 align-middle justify-center items-center w-[90%]"
-              action=""
-            >
-              <div className="flex flex-col gap-5 w-full">
-                <input
-                  className="border-2 border-pink-400 w-full p-3 text-white text-3xl rounded-2xl"
-                  type="text"
-                  name="title"
-                />
-                <input
-                  className="border-2 border-pink-400 w-full p-3 text-white text-3xl rounded-2xl"
-                  type="text"
-                  name="notes"
-                />
-              </div>
-              <div className="flex flex-row gap-4">
-                <button className="text-white bg-blue-500 text-3xl p-5 rounded-2xl">
-                  Save Changes
-                </button>
-                <button onClick={() => {
-                  if(hidepop === true) {
-                    setHidepop(false)
-                  }
-                }} className="text-white bg-blue-500 text-3xl p-5 rounded-2xl">
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
-          </div>
-        : 
-          <p></p>
-        }
+        {/*---------------------------------------------------------- show the edit notes UI ---------------------------------------------------------*/}
 
         {/*------------------------------------------------ All the history will be shown here ---------------------------------------------------*/}
 
@@ -268,8 +246,8 @@ function Dashboard() {
           <p className="text-pink-500 text-2xl ml-10 ">No Notes found</p>
         ) : (
           shownotes.map((shownote) => (
-            <div className="flex flex-row justify-around align-middle items-center">
-              <div className="border-2 border-white w-full p-6 ml-10 rounded-2xl flex flex-col gap-7">
+            <div className="flex flex-col gap-4 justify-around w-full align-middle items-center">
+              <div className="border-2 border-white w-[95%] p-6 rounded-2xl flex flex-col gap-7">
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-5" key={shownote._id}>
                     <h1 className="text-3xl text-white">
@@ -308,7 +286,57 @@ function Dashboard() {
                   </div>
                 </div>
               </div>
+
+              {/*----------------------- show the notes edit when You click on the edit button. Dynamic UI ----------------------------------*/}
+              {hidepop ? (
+                <div className="w-full flex flex-col items-center align-middle justify-center bg-transparent">
+                  <div className="w-[95%] h-[70%] p-5 bg-gray-800 rounded-2xl gap-10 flex flex-col align-middle justify-center items-center">
+                    <h1 className="text-white text-6xl font-stretch-ultra-condensed">
+                      Edit Your Notes
+                    </h1>
+                    <form
+                      className="flex flex-col gap-5 align-middle justify-center items-center w-[90%]"
+                      action=""
+                      onSubmit={updatedataHandle(shownote._id)}
+                    >
+                      <div className="flex flex-col gap-5 w-full">
+                        <input
+                          className="border-2 border-pink-400 w-full p-3 text-white text-3xl rounded-2xl"
+                          type="text"
+                          name="title"
+                          defaultValue={shownote.title}
+                        />
+                        <input
+                          className="border-2 border-pink-400 w-full p-3 text-white text-3xl rounded-2xl"
+                          type="text"
+                          name="notes"
+                          defaultValue={shownote.notes}
+                        />
+                      </div>
+                      <div className="flex flex-row gap-4">
+                        <button className="text-white bg-blue-500 text-3xl p-5 rounded-2xl">
+                          Save Changes
+                        </button>
+                        <button
+                          onClick={() => {
+                            if (hidepop === true) {
+                              setHidepop(false);
+                            }
+                          }}
+                          className="text-white bg-blue-500 text-3xl p-5 rounded-2xl"
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              ) : (
+                <p></p>
+              )}
             </div>
+
+            // show the note UI
           ))
         )}
       </div>
