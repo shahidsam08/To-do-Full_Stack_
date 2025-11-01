@@ -56,4 +56,12 @@ const deleteNotes =  async (req, res) => {
   }
 }
 
-export { userNotes, shownotes, deleteNotes };
+
+
+// -------------------- notes edit -----------//
+const editnotes = async (req, res) => {
+
+}
+
+
+export { userNotes, shownotes, deleteNotes,editnotes };

@@ -1,5 +1,5 @@
 import express from "express"
-import  {userNotes, shownotes, deleteNotes } from "../controller/notescontroller.js"
+import  {userNotes, shownotes, deleteNotes, editnotes} from "../controller/notescontroller.js"
 import isVerified from "../middleware/tokenValidations.js"
 
 
@@ -15,8 +15,15 @@ router.post("/notes",isVerified,  userNotes)
 router.get("/shownotes", isVerified, shownotes)
 
 
-
+// ---------- Delete Notes --------//
 router.delete("/delete/:id",isVerified, deleteNotes);
+
+
+
+
+// -------------- Edit notes -------------------//
+router.patch('/edit/:id', isVerified, editnotes)
+
 
 
 export default router

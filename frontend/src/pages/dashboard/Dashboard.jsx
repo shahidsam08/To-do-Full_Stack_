@@ -19,9 +19,8 @@ function Dashboard() {
   /** database notes and title name */
   const [shownotes, setshowNotes] = useState([]);
 
-
   /** for deleting and id  */
-  const [noteid, setId] = useState("");
+  const [hidepop, setHidepop] = useState(false);
 
   /**---------------- call first time when the website load ----------------------------*/
   useEffect(() => {
@@ -73,7 +72,7 @@ function Dashboard() {
 
       if (res.data === "Created successfully.") {
         setSubmitnotes(true); // check the nodtes created succesfully
-        window.location.reload()
+        window.location.reload();
       } else if (res.data === "token is expired") {
         alert("token is expired!");
       } else if ((res.data.message = "badRequest")) {
@@ -127,8 +126,8 @@ function Dashboard() {
         })
         .then((res) => {
           if (res.data.message === "DeleteSuccessfully") {
-            alert("note Delete successfully")
-            window.location.reload()
+            alert("note Delete successfully");
+            window.location.reload();
           }
         });
     } catch (error) {
@@ -136,6 +135,7 @@ function Dashboard() {
     }
   };
 
+  /** ---------------------- Edit notes from the id ------------------------------------- */
 
   return (
     <div className="bg-black scroll-smooth h-screen w-full pb-15">
@@ -219,7 +219,50 @@ function Dashboard() {
           </div>
         </button>
 
-        {/* All the history will be shown here */}
+
+           {/*---------------------------------------------------------- show the edit notes UI ---------------------------------------------------------*/}
+        { hidepop ?
+          <div className="bg-black w-full flex flex-col items-center align-middle justify-center">
+          <div className="w-[80%] h-[70%] p-5 bg-gray-800 rounded-2xl gap-10 flex flex-col align-middle justify-center items-center">
+            <h1 className="text-white text-6xl font-stretch-ultra-condensed">
+              Edit Your Notes
+            </h1>
+            <form
+              className="flex flex-col gap-5 align-middle justify-center items-center w-[90%]"
+              action=""
+            >
+              <div className="flex flex-col gap-5 w-full">
+                <input
+                  className="border-2 border-pink-400 w-full p-3 text-white text-3xl rounded-2xl"
+                  type="text"
+                  name="title"
+                />
+                <input
+                  className="border-2 border-pink-400 w-full p-3 text-white text-3xl rounded-2xl"
+                  type="text"
+                  name="notes"
+                />
+              </div>
+              <div className="flex flex-row gap-4">
+                <button className="text-white bg-blue-500 text-3xl p-5 rounded-2xl">
+                  Save Changes
+                </button>
+                <button onClick={() => {
+                  if(hidepop === true) {
+                    setHidepop(false)
+                  }
+                }} className="text-white bg-blue-500 text-3xl p-5 rounded-2xl">
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
+          </div>
+        : 
+          <p></p>
+        }
+
+        {/*------------------------------------------------ All the history will be shown here ---------------------------------------------------*/}
 
         {shownotes.length === 0 ? (
           <p className="text-pink-500 text-2xl ml-10 ">No Notes found</p>
@@ -230,23 +273,35 @@ function Dashboard() {
                 <div className="flex flex-col gap-6">
                   <div className="flex flex-col gap-5" key={shownote._id}>
                     <h1 className="text-3xl text-white">
-                      <span className="text-4xl font-bold text-pink-700 order-2 border-pink-500 bg-amber-200 p-1 rounded-2xl mr-3">Title:</span> {shownote.title}{" "}
+                      <span className="text-4xl font-bold text-pink-700 order-2 border-pink-500 bg-amber-200 p-1 rounded-2xl mr-3">
+                        Title:
+                      </span>{" "}
+                      {shownote.title}{" "}
                     </h1>
                     <p className="text-3xl text-white">
-                      <span className="text-4xl font-bold text-pink-700 border-2 border-pink-500 bg-amber-200 p-1 rounded-2xl mr-3">Notes:</span> {shownote.notes}{" "}
+                      <span className="text-4xl font-bold text-pink-700 border-2 border-pink-500 bg-amber-200 p-1 rounded-2xl mr-3">
+                        Notes:
+                      </span>{" "}
+                      {shownote.notes}{" "}
                     </p>
                   </div>
                   <div className="flex lg:flex-row gap-4 flex-wrap">
-                    <button className="text-white bg-blue-500 px-5 py-3 text-3xl rounded-2xl" onClick={() => {const value = window.confirm("Are you sure to confirm?")
-                      if(value === true) {
-                        navigate("/editNotes")
-                      }
-                    }}>
+                    <button
+                      className="text-white bg-blue-500 px-5 py-3 text-3xl rounded-2xl"
+                      // when I click over here so pop up of the edit dashboard.
+                      onClick={() => {
+                        if (hidepop === false) {
+                          setHidepop(true);
+                        }
+                      }}
+                    >
                       Edit
                     </button>
                     <button
                       className="text-white bg-red-600 px-5 py-3 text-3xl rounded-2xl cursor-pointer hover:bg-red-800 transition duration-1000 ease-in-out"
-                      onClick={ () => {delnotesHandle(shownote._id)}}
+                      onClick={() => {
+                        delnotesHandle(shownote._id);
+                      }}
                     >
                       Delete
                     </button>
@@ -256,8 +311,6 @@ function Dashboard() {
             </div>
           ))
         )}
-
-        {/* This is the end of the element of the database. */}
       </div>
     </div>
   );
