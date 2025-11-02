@@ -61,7 +61,13 @@ const deleteNotes =  async (req, res) => {
 // -------------------- notes edit -----------//
 const editnotes = async (req, res) => {
   const noteid = req.params.id
-  const updatedata = await Notes.findOneAndUpdate({_id : noteid})
+  const {title, notes} = req.body
+  const finduser = await Notes.findOne({_id : noteid})
+  if(finduser) {
+     const updateuser = await Notes.findByIdAndUpdate(noteid, {title: title, notes : notes}, {new : true})
+  res.status(200).json({message : "UpdateSuccessfully"})
+  }
+ 
 }
 
 

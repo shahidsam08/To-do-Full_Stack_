@@ -22,6 +22,9 @@ function Dashboard() {
   /** for deleting and id  */
   const [hidepop, setHidepop] = useState(false);
 
+  /** save notes and setsave notes */
+  const [savechanges, setsavechanges] = useState(false);
+
   /**---------------- call first time when the website load ----------------------------*/
   useEffect(() => {
     try {
@@ -126,8 +129,8 @@ function Dashboard() {
         })
         .then((res) => {
           if (res.data.message === "DeleteSuccessfully") {
-            alert("note Delete successfully");
-            window.location.reload();
+            alert("Message delete successfully");
+            window.location.reload(); 
           }
         });
     } catch (error) {
@@ -155,6 +158,11 @@ function Dashboard() {
       console.log(error);
     }
   };
+
+  /** use setimeout function for the when I click on the button it show message is saved but settimeout changes into the false value */
+  setTimeout(() => {
+    setsavechanges(false);
+  }, 5000);
 
   return (
     <div className="bg-black scroll-smooth h-screen w-full pb-15">
@@ -238,6 +246,13 @@ function Dashboard() {
           </div>
         </button>
 
+        {/* for showing the message you are done changes. */}
+        {savechanges ? (
+         alert("Changes successfully")
+        ) : (
+          ""
+        )}
+
         {/*---------------------------------------------------------- show the edit notes UI ---------------------------------------------------------*/}
 
         {/*------------------------------------------------ All the history will be shown here ---------------------------------------------------*/}
@@ -256,7 +271,7 @@ function Dashboard() {
                       </span>{" "}
                       {shownote.title}{" "}
                     </h1>
-                    <p className="text-3xl text-white">
+                    <p className="text-3xl text-white leading-12">
                       <span className="text-4xl font-bold text-pink-700 border-2 border-pink-500 bg-amber-200 p-1 rounded-2xl mr-3">
                         Notes:
                       </span>{" "}
@@ -270,10 +285,13 @@ function Dashboard() {
                       onClick={() => {
                         if (hidepop === false) {
                           setHidepop(true);
+                        } else {
+                          setHidepop(false);
                         }
                       }}
+                      
                     >
-                      Edit
+                      edit
                     </button>
                     <button
                       className="text-white bg-red-600 px-5 py-3 text-3xl rounded-2xl cursor-pointer hover:bg-red-800 transition duration-1000 ease-in-out"
@@ -299,22 +317,35 @@ function Dashboard() {
                       action=""
                       onSubmit={updatedataHandle(shownote._id)}
                     >
-                      <div className="flex flex-col gap-5 w-full">
+                      <div className="flex flex-col gap-2 w-full">
+                        <span className="text-4xl text-blue-500 font-bold">
+                          Title:{" "}
+                        </span>
                         <input
-                          className="border-2 border-pink-400 w-full p-3 text-white text-3xl rounded-2xl"
+                          className="border-2 border-pink-400 w-full p-3 mb-4 text-white text-3xl rounded-2xl"
                           type="text"
                           name="title"
                           defaultValue={shownote.title}
+                          onChange={(e) => setTitle(e.target.value)}
                         />
+                        <span className="text-4xl text-blue-500 font-bold">
+                          Notes:{" "}
+                        </span>
                         <input
                           className="border-2 border-pink-400 w-full p-3 text-white text-3xl rounded-2xl"
                           type="text"
                           name="notes"
                           defaultValue={shownote.notes}
+                          onChange={(e) => setNotes(e.target.value)}
                         />
                       </div>
                       <div className="flex flex-row gap-4">
-                        <button className="text-white bg-blue-500 text-3xl p-5 rounded-2xl">
+                        <button
+                          className="text-white bg-blue-500 text-3xl p-5 rounded-2xl"
+                          onClick={() => {
+                            setsavechanges(true);
+                          }}
+                        >
                           Save Changes
                         </button>
                         <button
