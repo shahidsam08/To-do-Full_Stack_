@@ -130,7 +130,7 @@ function Dashboard() {
         .then((res) => {
           if (res.data.message === "DeleteSuccessfully") {
             alert("Message delete successfully");
-            window.location.reload(); 
+            window.location.reload();
           }
         });
     } catch (error) {
@@ -138,19 +138,16 @@ function Dashboard() {
     }
   };
 
-  /** ---------------------- Edit notes from the id ------------------------------------- */
+  /** ---------------------- showing for the specific notes request for updating------------------------------------- */
   const updatedataHandle = async (id) => {
     try {
       await axios
-        .patch(
-          `http://localhost:5004/user/edit/${id}`,
-          {
-            title: title,
-            notes: notes,
-          },
-          { withCredentials: true }
-        )
-        .then((res) => {})
+        .get(`http://localhost:5004/user/edit/${id}`, { withCredentials: true })
+        .then((res) => {
+          if (res.data.message === "EditRequestsuccessfully") {
+            alert("Edit request send successfully");
+          }
+        })
         .catch((err) => {
           console.log(err);
         });
@@ -163,6 +160,25 @@ function Dashboard() {
   setTimeout(() => {
     setsavechanges(false);
   }, 5000);
+
+  // show the edit the data on the ----------------//
+  const editupdatehandle = async (id) => {
+    try {
+      await axios
+        .patch(
+          `http://localhost:5004/user/update/${id}`,
+          {
+            title: title,
+            notes: notes,
+          },
+          { withCredentials: true }
+        )
+        .then((res) => {
+
+        })
+        .catch((err) => {});
+    } catch (error) {}
+  };
 
   return (
     <div className="bg-black scroll-smooth h-screen w-full pb-15">
@@ -247,11 +263,6 @@ function Dashboard() {
         </button>
 
         {/* for showing the message you are done changes. */}
-        {savechanges ? (
-         alert("Changes successfully")
-        ) : (
-          ""
-        )}
 
         {/*---------------------------------------------------------- show the edit notes UI ---------------------------------------------------------*/}
 
@@ -283,13 +294,17 @@ function Dashboard() {
                       className="text-white bg-blue-500 px-5 py-3 text-3xl rounded-2xl"
                       // when I click over here so pop up of the edit dashboard.
                       onClick={() => {
-                        if (hidepop === false) {
-                          setHidepop(true);
-                        } else {
-                          setHidepop(false);
+                        {
+                          if (hidepop === false) {
+                            setHidepop(true);
+                          } else {
+                            setHidepop(false);
+                          }
+                        }
+                        {
+                          updatedataHandle(shownote._id);
                         }
                       }}
-                      
                     >
                       edit
                     </button>
@@ -315,7 +330,7 @@ function Dashboard() {
                     <form
                       className="flex flex-col gap-5 align-middle justify-center items-center w-[90%]"
                       action=""
-                      onSubmit={updatedataHandle(shownote._id)}
+                      onSubmit={updatedataHandle}
                     >
                       <div className="flex flex-col gap-2 w-full">
                         <span className="text-4xl text-blue-500 font-bold">
@@ -325,6 +340,7 @@ function Dashboard() {
                           className="border-2 border-pink-400 w-full p-3 mb-4 text-white text-3xl rounded-2xl"
                           type="text"
                           name="title"
+                          required
                           defaultValue={shownote.title}
                           onChange={(e) => setTitle(e.target.value)}
                         />
@@ -335,6 +351,7 @@ function Dashboard() {
                           className="border-2 border-pink-400 w-full p-3 text-white text-3xl rounded-2xl"
                           type="text"
                           name="notes"
+                          required
                           defaultValue={shownote.notes}
                           onChange={(e) => setNotes(e.target.value)}
                         />
@@ -343,7 +360,11 @@ function Dashboard() {
                         <button
                           className="text-white bg-blue-500 text-3xl p-5 rounded-2xl"
                           onClick={() => {
-                            setsavechanges(true);
+                            {
+                              setsavechanges(true);
+                            }
+                            { editupdatehandle(shownote._id)
+                            }
                           }}
                         >
                           Save Changes

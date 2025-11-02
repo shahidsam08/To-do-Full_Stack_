@@ -42,33 +42,52 @@ const shownotes = async (req, res) => {
 
 // Delete the notes from the dashboard and also from the database.
 
-const deleteNotes =  async (req, res) => {
+const deleteNotes = async (req, res) => {
   try {
-    const noteid = req.params.id
-    const deleteNotes = await Notes.findByIdAndDelete({_id : noteid})
-    if(deleteNotes) {
-      res.status(200).json({message : "DeleteSuccessfully"})
-    } else  {
-      res.status(401).json({message : "Notes not found!"})
+    const noteid = req.params.id;
+    const deleteNotes = await Notes.findByIdAndDelete({ _id: noteid });
+    if (deleteNotes) {
+      res.status(200).json({ message: "DeleteSuccessfully" });
+    } else {
+      res.status(401).json({ message: "Notes not found!" });
     }
   } catch (error) {
-    res.status(500).json({message : "server error", error : error})
+    res.status(500).json({ message: "server error", error: error });
   }
-}
+};
 
+/** ----------------------- When I click on the edit button it send the id to the backend and edit some specific notes ------------------ */
 
-
-// -------------------- notes edit -----------//
+// -------------------- notes edit send request -----------//
 const editnotes = async (req, res) => {
-  const noteid = req.params.id
-  const {title, notes} = req.body
-  const finduser = await Notes.findOne({_id : noteid})
-  if(finduser) {
-     const updateuser = await Notes.findByIdAndUpdate(noteid, {title: title, notes : notes}, {new : true})
-  res.status(200).json({message : "UpdateSuccessfully"})
+  try {
+    const noteid = req.params.id;
+    const finduser = await Notes.findOne({ _id: noteid });
+    if (finduser) {
+      res.status(200).json({ message: "EditRequestsuccessfully" });
+    }
+  } catch (error) {
+    res.json("Server error");
   }
- 
+};
+
+
+
+// ---------------------- for editing notes ---------------------//
+
+const updatenotes = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const {title, notes} = req.body
+    const updateData = await Notes.findByIdAndUpdate(id, {title, notes}, {new : true});
+    if(!updateData) {
+      return res.status(404).json({message : "Note not found"})
+    } else {
+      res.status(200).json({message : "Note update successfully", data: updateData})
+    }
+  } catch (error) {
+    res.status(500).json({message : "server error"})
+  }
 }
 
-
-export { userNotes, shownotes, deleteNotes,editnotes };
+export { userNotes, shownotes, deleteNotes, editnotes, updatenotes };
