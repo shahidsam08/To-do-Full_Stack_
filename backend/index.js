@@ -9,7 +9,7 @@ import notesrouter from './src/Router/notesrouter.js'
 
 const app = express();
 dotenv.config();
-app.use(cors({ origin:'http://localhost:5173', credentials: true }));
+app.use(cors({ origin: process.env.CLIENT_CONNECTION, credentials: true }));
 app.use(express.json());
 app.use(cookieParser());
 app.use(helmet())
