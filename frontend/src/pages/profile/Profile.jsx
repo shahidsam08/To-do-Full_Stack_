@@ -6,6 +6,8 @@ import { LiaPencilAltSolid } from "react-icons/lia";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Link } from "react-router";
+import { FaUserAlt } from "react-icons/fa";
+
 
 axios.defaults.withCredentials = true;
 function Profile() {
@@ -75,7 +77,7 @@ function Profile() {
           className="border-2 border-white w-30 h-30 rounded-full flex flex-col align-middle justify-center items-center p-1 mb-8"
         >
           <div className="bg-white w-28 h-29 rounded-full flex items-center align-center justify-center text-center ">
-            userimage
+            <FaUserAlt size={70}/>
           </div>
         </form>
         <div className=" bg-green-500 w-[95%] text-2xl rounded-2xl text-black text-center p-3 flex flex-row items-center align-middle justify-between">
@@ -92,7 +94,7 @@ function Profile() {
           <p>
             {isLoggedout ? <p className="text-white">User name</p> : email}{" "}
           </p>
-          <LiaPencilAltSolid />
+          {/* <LiaPencilAltSolid /> */}
         </div>
         <Link to="/history" className="w-[95%]">
           <div className=" bg-green-500 text-2xl rounded-2xl text-black text-center p-3 flex flex-row items-center align-middle justify-between">

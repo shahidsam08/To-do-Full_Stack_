@@ -194,7 +194,7 @@ function Dashboard() {
           </div>
           <div className="border-2 border-white w-25 h-25 rounded-full flex flex-col align-middle justify-center items-center p-1">
             <div className="bg-white w-22 h-23 rounded-full flex items-center align-center justify-center text-center ">
-              userimage
+              <FaUserAlt size={50}/>
             </div>
           </div>
         </div>
